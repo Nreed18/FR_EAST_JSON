@@ -7,7 +7,7 @@ from pytz import timezone
 app = Flask(__name__)
 
 SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json"
-SOURCE_WEST = "https://yp.cdnstream1.com/metadata/9999_128/last/12.json"  # Replace with real feed
+SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # Replace with real feed
 SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/8888_128/last/12.json"  # Replace with real feed
 
 def fetch_tracks(source_url):
@@ -42,9 +42,9 @@ def to_spec_format(raw_tracks):
     central_time = timezone('America/Chicago')
 
     for idx, track in enumerate(raw_tracks):
-        artist = track.get("tpe1") or "Unknown Artist"
-        title = track.get("tit2") or "Unknown Title"
-        album = track.get("talb", "")
+        artist = track.get("TPE1") or "Unknown Artist"
+        title = track.get("TIT2") or "Unknown Title"
+        album = track.get("TALB", "")
         duration = track.get("duration", "00:03:00")
         start_time = track.get("start_time", datetime.now().timestamp())
         time_str = datetime.fromtimestamp(start_time, tz=central_time).isoformat()
