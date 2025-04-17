@@ -36,8 +36,8 @@ def to_spec_format(raw_tracks):
 
     for idx, track in enumerate(raw_tracks):
         # Map ID3-style fields
-        artist = track.get("tpe1") or "Unknown Artist"
-        title = track.get("tit2") or "Unknown Title"
+        artist = track.get("TPE1") or "Family Radio"
+        title = track.get("TIT2") or "Family Radio"
         album = track.get("talb", "")
         duration = track.get("duration", "00:03:00")
         start_time = track.get("start_time", datetime.now().timestamp())
