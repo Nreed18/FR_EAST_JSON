@@ -7,12 +7,17 @@ from pytz import timezone
 app = Flask(__name__)
 
 SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json"
-SOURCE_WEST = "https://yp.cdnstream1.com/metadata/9999_128/last/12.json"  # Replace with actual west feed URL
-SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/8888_128/last/12.json"  # Replace with actual third feed URL
+SOURCE_WEST = "https://yp.cdnstream1.com/metadata/9999_128/last/12.json"  # Replace with real feed
+SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/8888_128/last/12.json"  # Replace with real feed
 
 def fetch_tracks(source_url):
-    response = requests.get(source_url)
-    return response.json()
+    try:
+        response = requests.get(source_url, timeout=5)
+        response.raise_for_status()
+        return response.json()
+    except Exception as e:
+        print(f"[ERROR] Failed to fetch from {source_url}: {e}")
+        return []
 
 def lookup_itunes(artist, title):
     try:
@@ -28,8 +33,8 @@ def lookup_itunes(artist, title):
                 "itunesTrackUrl": item.get("trackViewUrl", ""),
                 "previewUrl": item.get("previewUrl", "")
             }
-    except Exception:
-        pass
+    except Exception as e:
+        print(f"[WARN] iTunes lookup failed for {artist} - {title}: {e}")
     return {"imageUrl": "", "itunesTrackUrl": "", "previewUrl": ""}
 
 def to_spec_format(raw_tracks):
@@ -65,21 +70,30 @@ def to_spec_format(raw_tracks):
 
 @app.route("/feed.json")
 def feed_east():
-    raw_tracks = fetch_tracks(SOURCE_EAST)
-    converted = to_spec_format(raw_tracks)
-    return jsonify({"nowPlaying": converted})
+    try:
+        raw_tracks = fetch_tracks(SOURCE_EAST)
+        return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
+    except Exception as e:
+        print(f"[ERROR] /feed.json failed: {e}")
+        return jsonify({"error": "Failed to load EAST feed"}), 500
 
 @app.route("/feed-west.json")
 def feed_west():
-    raw_tracks = fetch_tracks(SOURCE_WEST)
-    converted = to_spec_format(raw_tracks)
-    return jsonify({"nowPlaying": converted})
+    try:
+        raw_tracks = fetch_tracks(SOURCE_WEST)
+        return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
+    except Exception as e:
+        print(f"[ERROR] /feed-west.json failed: {e}")
+        return jsonify({"error": "Failed to load WEST feed"}), 500
 
 @app.route("/feed-third.json")
 def feed_third():
-    raw_tracks = fetch_tracks(SOURCE_THIRD)
-    converted = to_spec_format(raw_tracks)
-    return jsonify({"nowPlaying": converted})
+    try:
+        raw_tracks = fetch_tracks(SOURCE_THIRD)
+        return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
+    except Exception as e:
+        print(f"[ERROR] /feed-third.json failed: {e}")
+        return jsonify({"error": "Failed to load THIRD feed"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
