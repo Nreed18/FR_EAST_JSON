@@ -68,31 +68,31 @@ def to_spec_format(raw_tracks):
         output.append(track_obj)
     return output
 
-@app.route("/feed.json")
+@app.route("/east-feed.json")
 def feed_east():
     try:
         raw_tracks = fetch_tracks(SOURCE_EAST)
         return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
     except Exception as e:
-        print(f"[ERROR] /feed.json failed: {e}")
+        print(f"[ERROR] /east-feed.json failed: {e}")
         return jsonify({"error": "Failed to load EAST feed"}), 500
 
-@app.route("/feed-west.json")
+@app.route("/west-feed.json")
 def feed_west():
     try:
         raw_tracks = fetch_tracks(SOURCE_WEST)
         return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
     except Exception as e:
-        print(f"[ERROR] /feed-west.json failed: {e}")
+        print(f"[ERROR] /west-feed.json failed: {e}")
         return jsonify({"error": "Failed to load WEST feed"}), 500
 
-@app.route("/feed-third.json")
+@app.route("/worship-feed.json")
 def feed_third():
     try:
         raw_tracks = fetch_tracks(SOURCE_THIRD)
         return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
     except Exception as e:
-        print(f"[ERROR] /feed-third.json failed: {e}")
+        print(f"[ERROR] /worship-feed.json failed: {e}")
         return jsonify({"error": "Failed to load THIRD feed"}), 500
 
 if __name__ == "__main__":
