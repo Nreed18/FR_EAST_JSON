@@ -6,9 +6,9 @@ from pytz import timezone
 
 app = Flask(__name__)
 
-SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json"
-SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # Replace with real feed
-SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/8888_128/last/12.json"  # Replace with real feed
+SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json" # East JSON Feed from SoundStack (WFME)
+SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # West JSON feed from SoundStack (KEAR)
+SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/8888_128/last/12.json"  # Will be Worship JSON feed from SoundStack 
 
 def fetch_tracks(source_url):
     try:
