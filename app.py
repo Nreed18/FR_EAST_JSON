@@ -16,7 +16,7 @@ HTML_TEMPLATE = '''
 <head>
     <title>Family Radio Feeds</title>
     <style>
-        body {{ font-family: sans-serif; text-align: center; padding-top: 50px; }}
+        body {{ '{' }} font-family: sans-serif; text-align: center; padding-top: 50px; {{ '}' }}
         h1 {{ margin-bottom: 30px; }}
         .button {{
             display: inline-block;
