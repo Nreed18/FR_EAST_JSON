@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json" # East JSON Feed from SoundStack (WFME)
 SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # West JSON feed from SoundStack (KEAR)
-SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/8888_128/last/12.json"  # Will be Worship JSON feed from SoundStack 
+SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/2878_128/last/12.json"  # Will be Worship JSON feed from SoundStack 
 
 def fetch_tracks(source_url):
     try:
@@ -42,8 +42,8 @@ def to_spec_format(raw_tracks):
     central_time = timezone('America/Chicago')
 
     for idx, track in enumerate(raw_tracks):
-        artist = track.get("TPE1") or "Unknown Artist"
-        title = track.get("TIT2") or "Unknown Title"
+        artist = track.get("TPE1") or "Family Radio"
+        title = track.get("TIT2") or "FamilyRadio.org"
         album = track.get("TALB", "")
         duration = track.get("duration", "00:03:00")
         start_time = track.get("start_time", datetime.now().timestamp())
@@ -93,7 +93,7 @@ def feed_third():
         return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
     except Exception as e:
         print(f"[ERROR] /worship-feed.json failed: {e}")
-        return jsonify({"error": "Failed to load THIRD feed"}), 500
+        return jsonify({"error": "Failed to load Worship feed"}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8080)
