@@ -16,9 +16,9 @@ HTML_TEMPLATE = '''
 <head>
     <title>Family Radio Feeds</title>
     <style>
-        body {{ '{' }} font-family: sans-serif; text-align: center; padding-top: 50px; {{ '}' }}
-        h1 {{ margin-bottom: 30px; }}
-        .button {{
+        body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+        h1 { margin-bottom: 30px; }
+        .button {
             display: inline-block;
             margin: 10px;
             padding: 15px 30px;
@@ -27,10 +27,10 @@ HTML_TEMPLATE = '''
             color: white;
             text-decoration: none;
             border-radius: 8px;
-        }}
-        .button:hover {{
+        }
+        .button:hover {
             background-color: #005fa3;
-        }}
+        }
     </style>
 </head>
 <body>
