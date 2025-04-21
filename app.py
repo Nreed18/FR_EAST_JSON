@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template_string
 import requests
 import uuid
 from datetime import datetime
@@ -6,9 +6,41 @@ from pytz import timezone
 
 app = Flask(__name__)
 
-SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json" # East JSON Feed from SoundStack (WFME)
-SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # West JSON feed from SoundStack (KEAR)
-SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/2878_128/last/12.json"  # Will be Worship JSON feed from SoundStack 
+SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json"  # East JSON Feed from SoundStack (WFME)
+SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # West JSON Feed from SoundStack (KEAR)
+SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/2878_128/last/12.json"  # Will be Worship JSON Feed from SoundStack
+
+HTML_TEMPLATE = '''
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Family Radio Feeds</title>
+    <style>
+        body {{ font-family: sans-serif; text-align: center; padding-top: 50px; }}
+        h1 {{ margin-bottom: 30px; }}
+        .button {{
+            display: inline-block;
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #0077cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }}
+        .button:hover {{
+            background-color: #005fa3;
+        }}
+    </style>
+</head>
+<body>
+    <h1>Family Radio JSON Feeds</h1>
+    <a class="button" href="/east-feed.json" target="_blank">East Feed (WFME)</a>
+    <a class="button" href="/west-feed.json" target="_blank">West Feed (KEAR)</a>
+    <a class="button" href="/worship-feed.json" target="_blank">Worship Feed</a>
+</body>
+</html>
+'''
 
 def fetch_tracks(source_url):
     try:
@@ -67,6 +99,10 @@ def to_spec_format(raw_tracks):
 
         output.append(track_obj)
     return output
+
+@app.route("/")
+def homepage():
+    return render_template_string(HTML_TEMPLATE)
 
 @app.route("/east-feed.json")
 def feed_east():
