@@ -1,16 +1,15 @@
-+from flask import Flask, jsonify, send_from_directory, render_template_string
-+from flask_cors import CORS
-import requests
-import uuid
-from datetime import datetime
-from pytz import timezone
+from flask import Flask, jsonify, send_from_directory, render_template_string
+from flask_cors import CORS
 
-+CORS(app := Flask(
-+    __name__,
-+    static_folder="static",        # where your player HTML/CSS/JS will go
-+    template_folder="static"       # same folder for index.html
-+))
+app = Flask(
+    __name__,
+    static_folder="static",        # serves your player’s HTML/CSS/JS
+    template_folder="static"       # for index.html as template
+)
+CORS(app)  # enable Access-Control-Allow-Origin: *
 
+# If you ever need subdomain routing, set SERVER_NAME
+# app.config["SERVER_NAME"] = "api.yoursite.com"
 SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json"  # East JSON Feed from SoundStack (WFME)
 SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # West JSON Feed from SoundStack (KEAR)
 SOURCE_THIRD = "https://yp.cdnstream1.com/metadata/2878_128/last/12.json"  # Will be Worship JSON Feed from SoundStack
@@ -105,36 +104,35 @@ def to_spec_format(raw_tracks):
         output.append(track_obj)
     return output
 
-@app.route("/")
-def homepage():
+# 1) Three‑button JSON selector on the subdomain "feeds.api.yoursite.com"
+@app.route("/", subdomain="feeds")
+def json_selector():
+    # HTML_TEMPLATE is your 3‑button page
     return render_template_string(HTML_TEMPLATE)
 
+
+# 2) Player at the root of api.yoursite.com
+@app.route("/", subdomain=None)  
+def serve_player():
+    # serves static/index.html from your built player
+    return send_from_directory(app.static_folder, "index.html")
+
+
+# 3) Your JSON feed endpoints remain global (no subdomain)
 @app.route("/east-feed.json")
 def feed_east():
-    try:
-        raw_tracks = fetch_tracks(SOURCE_EAST)
-        return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
-    except Exception as e:
-        print(f"[ERROR] /east-feed.json failed: {e}")
-        return jsonify({"error": "Failed to load EAST feed"}), 500
+    # … same as before …
+    return jsonify({"nowPlaying": to_spec_format(fetch_tracks(SOURCE_EAST))})
 
 @app.route("/west-feed.json")
 def feed_west():
-    try:
-        raw_tracks = fetch_tracks(SOURCE_WEST)
-        return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
-    except Exception as e:
-        print(f"[ERROR] /west-feed.json failed: {e}")
-        return jsonify({"error": "Failed to load WEST feed"}), 500
+    return jsonify({"nowPlaying": to_spec_format(fetch_tracks(SOURCE_WEST))})
 
 @app.route("/worship-feed.json")
-def feed_third():
-    try:
-        raw_tracks = fetch_tracks(SOURCE_THIRD)
-        return jsonify({"nowPlaying": to_spec_format(raw_tracks)})
-    except Exception as e:
-        print(f"[ERROR] /worship-feed.json failed: {e}")
-        return jsonify({"error": "Failed to load Worship feed"}), 500
+def feed_worship():
+    return jsonify({"nowPlaying": to_spec_format(fetch_tracks(SOURCE_THIRD))})
+
 
 if __name__ == "__main__":
+    # Listen on all interfaces; DO App Platform will route the correct host header
     app.run(host="0.0.0.0", port=8080)
