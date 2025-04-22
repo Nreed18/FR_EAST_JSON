@@ -2,3 +2,4 @@ Flask
 requests
 pytz
 gunicorn
+flask-cors
