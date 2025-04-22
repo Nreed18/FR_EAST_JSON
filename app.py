@@ -1,12 +1,19 @@
 from flask import Flask, jsonify, send_from_directory, render_template_string
 from flask_cors import CORS
+import requests                        # <— ensure this is here
+import uuid
+from datetime import datetime
+from pytz import timezone             # <— and this, so timezone() exists
 
 app = Flask(
     __name__,
-    static_folder="static",        # serves your player’s HTML/CSS/JS
-    template_folder="static"       # for index.html as template
+    static_folder="static",
+    template_folder="static"
 )
-CORS(app)  # enable Access-Control-Allow-Origin: *
+CORS(app)
+
+# … rest of your config/constants/routes …
+
 
 # If you ever need subdomain routing, set SERVER_NAME
 # app.config["SERVER_NAME"] = "api.yoursite.com"
