@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Family Radio</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <img id="logo" src="https://s3-eu-west-2.amazonaws.com/template.cms.production/i5f0rfxd.png" alt="Logo">
+    <div id="station-name">Loading…</div>
+    <button id="give-btn">Give Now</button>
+  </header>
+
+  <section id="now-playing">
+    <div id="hero">
+      <img id="hero-art" src="" alt="" />
+      <div id="info">
+        <h1 id="track-title">–</h1>
+        <p id="track-artist">–</p>
+      </div>
+    </div>
+    <div id="controls">
+      <button id="play-pause">▶︎</button>
+      <input type="range" id="volume" min="0" max="1" step="0.01" value="1">
+    </div>
+    <audio id="audio" preload="none"></audio>
+  </section>
+
+  <section id="stations">
+    <h2>Stations</h2>
+    <div id="station-list"></div>
+  </section>
+
+  <section id="history">
+    <h2>Last Played</h2>
+    <div id="history-list"></div>
+  </section>
+
+  <script src="app.js"></script>
+</body>
+</html>

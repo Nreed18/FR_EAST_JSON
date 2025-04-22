@@ -1,10 +1,15 @@
-from flask import Flask, jsonify, render_template_string
++from flask import Flask, jsonify, send_from_directory, render_template_string
++from flask_cors import CORS
 import requests
 import uuid
 from datetime import datetime
 from pytz import timezone
 
-app = Flask(__name__)
++CORS(app := Flask(
++    __name__,
++    static_folder="static",        # where your player HTML/CSS/JS will go
++    template_folder="static"       # same folder for index.html
++))
 
 SOURCE_EAST = "https://yp.cdnstream1.com/metadata/2632_128/last/12.json"  # East JSON Feed from SoundStack (WFME)
 SOURCE_WEST = "https://yp.cdnstream1.com/metadata/2638_128/last/12.json"  # West JSON Feed from SoundStack (KEAR)
